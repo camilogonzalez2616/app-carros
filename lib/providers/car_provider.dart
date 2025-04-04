@@ -13,13 +13,19 @@ class CarProvider with ChangeNotifier {
 
     final response = await http.get(
       url,
-      headers: {"Content-Type": "application/json", "Authentication": token},
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer $token",
+      },
     );
 
     if (response.statusCode == 200) {
       final List<dynamic> carData = jsonDecode(response.body);
       _cars = carData.map((json) => Car.fromJson(json)).toList();
       notifyListeners();
+    } else {
+      // Manejar el caso en que la respuesta no sea exitosa
+      print('Error al cargar los carros: ${response.statusCode}');
     }
   }
 }
